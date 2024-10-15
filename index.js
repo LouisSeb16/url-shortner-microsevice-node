@@ -25,6 +25,13 @@ let shortUrlCounter = 1;
 // POST endpoint to create short URL
 app.post('/api/shorturl', function(req, res) {
   const originalUrl = req.body.url;
+  
+  // Validate URL format
+  const urlRegex = /^(http|https):\/\/[^ "]+$/;
+  if (!urlRegex.test(originalUrl)) {
+    return res.json({ error: 'invalid url' });
+  }
+  
   const parsedUrl = urlparser.parse(originalUrl);
   
   dns.lookup(parsedUrl.hostname, (err) => {
